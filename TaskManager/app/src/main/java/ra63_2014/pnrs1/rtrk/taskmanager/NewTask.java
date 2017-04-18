@@ -3,6 +3,8 @@ package ra63_2014.pnrs1.rtrk.taskmanager;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +15,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Timer;
 
 public class NewTask extends AppCompatActivity {
 
@@ -33,6 +38,8 @@ public class NewTask extends AppCompatActivity {
     private boolean timeSet = false;
     private boolean dateSet = false;
     private boolean prioritySet = false;
+    private Calendar storageCalendar;
+    private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +60,9 @@ public class NewTask extends AppCompatActivity {
         textViewDatum = (TextView)findViewById(R.id.textViewDatum);
         textViewVreme = (TextView)findViewById(R.id.textViewVreme);
 
+        calendar = Calendar.getInstance();
+        storageCalendar = Calendar.getInstance();
+
         onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             //Called on time change
@@ -61,8 +71,8 @@ public class NewTask extends AppCompatActivity {
                 setTimeSet(true);
                 showToastTime(hourOfDay, minute);
 
-                //TODO: store time somewhere ?
-
+                storageCalendar.set(Calendar.MINUTE, minute);
+                storageCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             }
         };
 
@@ -74,7 +84,9 @@ public class NewTask extends AppCompatActivity {
                 setDateSet(true);
                 showToastDate(year, month, dayOfMonth);
 
-                //TODO: store date somewhere ?
+                storageCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                storageCalendar.set(Calendar.MONTH, month);
+                storageCalendar.set(Calendar.YEAR, year);
             }
         };
 
@@ -167,14 +179,14 @@ public class NewTask extends AppCompatActivity {
 
     public void showTimeDialog() {
 
-        new TimePickerDialog(NewTask.this, onTimeSetListener, 0, 0, true)
+        new TimePickerDialog(NewTask.this, onTimeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true)
                 .show();
 
     }
 
     public void showDateDialog() {
 
-        new DatePickerDialog(NewTask.this, onDateSetListener, 2017, 1, 1)
+        new DatePickerDialog(NewTask.this, onDateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
                 .show();
 
     }
