@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Task Manager</string>
+    <string name="button1">Novi zadatak</string>
+    <string name="button2">Statistika</string>
+    <string name="btnDodaj">Dodaj</string>
+    <string name="hintIme">Ime zadatka</string>
+    <string name="hintPeriodIsticanja">Period isticanja</string>
+    <string name="hintOpis">Opis zadatka</string>
+    <string name="podeseti">Podseti me 15 minuta pre isteka</string>
+    <string name="dodaj">Dodaj</string>
+    <string name="otkazi">Otkaži</string>
+    <string name="vremeIsteka">Vreme isteka</string>
+    <string name="datumIsteka">Datum isteka</string>
+    <string name="sampleText">Sample Text</string>
+</resources>

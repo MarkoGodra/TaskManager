@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:longClickable="true"
+    android:layout_height="40dp">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:background="@android:color/holo_red_dark"
+        android:clickable="false"
+        android:id="@+id/colour_button"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="@string/sampleText"
+        android:paddingLeft="5dp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:id="@+id/name_text"
+        android:layout_toRightOf="@id/colour_button"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="@string/sampleText"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:layout_alignParentRight="true"
+        android:id="@+id/edit"
+        android:layout_above="@+id/finished_check_box"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:clickable="false"
+        android:id="@+id/finished_check_box"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:id="@+id/urgency_button"
+        android:clickable="false"
+        android:layout_toLeftOf="@id/finished_check_box"/>
+</RelativeLayout>
