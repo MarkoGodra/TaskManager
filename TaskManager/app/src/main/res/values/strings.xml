@@ -12,4 +12,5 @@
     <string name="vremeIsteka">Vreme isteka</string>
     <string name="datumIsteka">Datum isteka</string>
     <string name="sampleText">Sample Text</string>
+    <string name="result">result</string>
 </resources>

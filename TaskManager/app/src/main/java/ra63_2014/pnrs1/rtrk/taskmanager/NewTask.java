@@ -1,10 +1,9 @@
 package ra63_2014.pnrs1.rtrk.taskmanager;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -38,6 +37,7 @@ public class NewTask extends AppCompatActivity {
     private boolean timeSet = false;
     private boolean dateSet = false;
     private boolean prioritySet = false;
+    private int priority;                       // RED = 3; YELLOW = 2; GREEN = 1;
     private Calendar storageCalendar;
     private Calendar calendar;
 
@@ -111,6 +111,7 @@ public class NewTask extends AppCompatActivity {
                 setPrioritySet(true);
                 btnYlw.setEnabled(false);
                 btnGrn.setEnabled(false);
+                priority = 3;
             }
         });
 
@@ -120,6 +121,7 @@ public class NewTask extends AppCompatActivity {
                 setPrioritySet(true);
                 btnGrn.setEnabled(false);
                 btnRed.setEnabled(false);
+                priority = 2;
             }
         });
 
@@ -129,6 +131,7 @@ public class NewTask extends AppCompatActivity {
                 setPrioritySet(true);
                 btnRed.setEnabled(false);
                 btnYlw.setEnabled(false);
+                priority = 1;
             }
         });
 
@@ -141,15 +144,21 @@ public class NewTask extends AppCompatActivity {
                         && !editTextOpis.getText().toString().isEmpty()){
 
                     //TODO: some operations will come here, adding items to list etc
-                    //newTaskPresenter.addItemToList(editTextIme.getText().toString(), textViewDatum.getText().toString());
+
+                    Task task = new Task(editTextIme.getText().toString(), editTextOpis.getText().toString(),
+                            priority, storageCalendar, true, true);
 
                     setPrioritySet(false);
                     setTimeSet(false);
                     setDateSet(false);
 
                     showToastCreated();
-                    proceedOnStartActivity();
+                    Intent i = new Intent(getBaseContext(), StartActivity.class);
+
+                    i.putExtra(getResources().getString(R.string.result), task);
+                    setResult(Activity.RESULT_OK, i);
                     finish();
+
 
                 } else {
                     showToastInvalid();
@@ -161,11 +170,6 @@ public class NewTask extends AppCompatActivity {
         btnOtkazi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setPrioritySet(false);
-                setTimeSet(false);
-                setDateSet(false);
-                showToastCanceled();
-                proceedOnStartActivity();
                 finish();
             }
         });
