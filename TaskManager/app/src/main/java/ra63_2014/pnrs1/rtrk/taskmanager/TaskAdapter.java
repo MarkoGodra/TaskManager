@@ -24,6 +24,8 @@ public class TaskAdapter extends BaseAdapter {
     private ArrayList<Task> list;
     private Date date;
     private Calendar tempCalendar;
+    private Calendar cal1;
+    private Calendar cal2;
 
     private class ViewHolder{
         public TextView ime = null;
@@ -71,7 +73,7 @@ public class TaskAdapter extends BaseAdapter {
 
         if(view == null){
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.task_row, null);
+            view = inflater.inflate(R.layout.task_row, parent, false);
 
             ViewHolder holder = new ViewHolder();
             holder.ime = (TextView)view.findViewById(R.id.name_text);
@@ -84,13 +86,51 @@ public class TaskAdapter extends BaseAdapter {
 
         date = new Date();
         tempCalendar = Calendar.getInstance();
+        cal1 = Calendar.getInstance();
+        cal2 = Calendar.getInstance();
 
         Task task = (Task)getItem(position);
         ViewHolder holder = (ViewHolder)view.getTag();
         holder.ime.setText(task.getIme());
         tempCalendar = task.getCalendar();
         date = task.getCalendar().getTime();
-        holder.date.setText(Integer.toString(tempCalendar.get(Calendar.HOUR_OF_DAY)));
+        cal1.add(Calendar.DAY_OF_YEAR, 1);
+        cal2.add(Calendar.DAY_OF_YEAR, 7);
+
+        if(tempCalendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR)){
+            holder.date.setText("Danas u " + tempCalendar.get(Calendar.HOUR_OF_DAY)+ "" + " : " + tempCalendar.get(Calendar.MINUTE) + "");
+        } else if(tempCalendar.get(Calendar.DAY_OF_YEAR) == cal1.get(Calendar.DAY_OF_YEAR)){
+            holder.date.setText("Sutra u " + tempCalendar.get(Calendar.HOUR_OF_DAY)+ "" + " : " + tempCalendar.get(Calendar.MINUTE) + "");
+        } else if(tempCalendar.get(Calendar.DAY_OF_YEAR) < cal2.get(Calendar.DAY_OF_YEAR)) {
+            switch (tempCalendar.get(Calendar.DAY_OF_WEEK)) {
+                case Calendar.SUNDAY:
+                    holder.date.setText("Nedelja u " + tempCalendar.get(Calendar.HOUR_OF_DAY) + "" + " : " + tempCalendar.get(Calendar.MINUTE) + "");
+                    break;
+                case Calendar.MONDAY:
+                    holder.date.setText("Ponedeljak u " + tempCalendar.get(Calendar.HOUR_OF_DAY) + "" + " : " + tempCalendar.get(Calendar.MINUTE) + "");
+                    break;
+                case Calendar.TUESDAY:
+                    holder.date.setText("Utorak u " + tempCalendar.get(Calendar.HOUR_OF_DAY) + "" + " : " + tempCalendar.get(Calendar.MINUTE) + "");
+                    break;
+                case Calendar.WEDNESDAY:
+                    holder.date.setText("Sreda u " + tempCalendar.get(Calendar.HOUR_OF_DAY) + "" + " : " + tempCalendar.get(Calendar.MINUTE) + "");
+                    break;
+                case Calendar.THURSDAY:
+                    holder.date.setText("Cetvrtak u " + tempCalendar.get(Calendar.HOUR_OF_DAY) + "" + " : " + tempCalendar.get(Calendar.MINUTE) + "");
+                    break;
+                case Calendar.FRIDAY:
+                    holder.date.setText("Petak u " + tempCalendar.get(Calendar.HOUR_OF_DAY) + "" + " : " + tempCalendar.get(Calendar.MINUTE) + "");
+                    break;
+                case Calendar.SATURDAY:
+                    holder.date.setText("Subota u " + tempCalendar.get(Calendar.HOUR_OF_DAY) + "" + " : " + tempCalendar.get(Calendar.MINUTE) + "");
+                    break;
+            }
+        } else {
+            holder.date.setText(tempCalendar.get(Calendar.DAY_OF_MONTH) + "" + "/" + (tempCalendar.get(Calendar.MONTH) + 1) + ""
+                                    + "/" + tempCalendar.get(Calendar.YEAR) + "" + " u " + tempCalendar.get(Calendar.HOUR_OF_DAY) + ""
+                                    + ":" + tempCalendar.get(Calendar.MINUTE) + "");
+        }
+
 
         return view;
     }

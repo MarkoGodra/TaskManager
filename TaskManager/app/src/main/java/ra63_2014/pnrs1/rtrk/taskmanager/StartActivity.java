@@ -16,7 +16,6 @@ public class StartActivity extends AppCompatActivity {
     private Button btnStat;
     private ListView listView;
     private TaskAdapter adapter;
-    private String TAG = "DEBUG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +61,6 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: USAO OVDE");
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 Task task = (Task)data.getSerializableExtra(getResources().getString(R.string.result));

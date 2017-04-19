@@ -143,16 +143,15 @@ public class NewTask extends AppCompatActivity {
                         && !editTextIme.getText().toString().isEmpty()
                         && !editTextOpis.getText().toString().isEmpty()){
 
-                    //TODO: some operations will come here, adding items to list etc
 
                     Task task = new Task(editTextIme.getText().toString(), editTextOpis.getText().toString(),
-                            priority, storageCalendar, true, true);
+                            priority, storageCalendar, checkBoxPodseti.isChecked(), false);
 
                     setPrioritySet(false);
                     setTimeSet(false);
                     setDateSet(false);
-
                     showToastCreated();
+
                     Intent i = new Intent(getBaseContext(), StartActivity.class);
 
                     i.putExtra(getResources().getString(R.string.result), task);
