@@ -1,6 +1,7 @@
 package ra63_2014.pnrs1.rtrk.taskmanager;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -130,6 +131,28 @@ public class TaskAdapter extends BaseAdapter {
                                     + "/" + tempCalendar.get(Calendar.YEAR) + "" + " u " + tempCalendar.get(Calendar.HOUR_OF_DAY) + ""
                                     + ":" + tempCalendar.get(Calendar.MINUTE) + "");
         }
+
+        switch (task.getPrioritet()) {
+            case 3 :
+                holder.urg.setBackgroundColor(context.getResources().getColor(R.color.red));
+                break;
+            case 2 :
+                holder.urg.setBackgroundColor(context.getResources().getColor(R.color.yellow));
+                break;
+            case 1 :
+                holder.urg.setBackgroundColor(context.getResources().getColor(R.color.green));
+                break;
+        }
+
+        if(task.isReminder())
+            holder.urgButton.setBackgroundColor(context.getResources().getColor(R.color.black));
+        else
+            holder.urgButton.setBackgroundColor(context.getResources().getColor(R.color.white));
+
+        holder.checkBox.setChecked(task.isZavrsen());
+
+        if(task.isZavrsen())
+            holder.ime.setPaintFlags(holder.ime.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
 
         return view;

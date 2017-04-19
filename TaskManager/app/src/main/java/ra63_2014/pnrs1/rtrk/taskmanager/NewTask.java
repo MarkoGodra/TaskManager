@@ -40,6 +40,8 @@ public class NewTask extends AppCompatActivity {
     private int priority;                       // RED = 3; YELLOW = 2; GREEN = 1;
     private Calendar storageCalendar;
     private Calendar calendar;
+    private boolean zavrsen = false;
+    private Calendar tempCal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class NewTask extends AppCompatActivity {
 
         calendar = Calendar.getInstance();
         storageCalendar = Calendar.getInstance();
+        tempCal = Calendar.getInstance();
 
         onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -143,9 +146,14 @@ public class NewTask extends AppCompatActivity {
                         && !editTextIme.getText().toString().isEmpty()
                         && !editTextOpis.getText().toString().isEmpty()){
 
+                    if(storageCalendar.getTimeInMillis() > tempCal.getTimeInMillis())
+                        zavrsen = false;
+                    else
+                        zavrsen = true;
+
 
                     Task task = new Task(editTextIme.getText().toString(), editTextOpis.getText().toString(),
-                            priority, storageCalendar, checkBoxPodseti.isChecked(), false);
+                            priority, storageCalendar, checkBoxPodseti.isChecked(), zavrsen);
 
                     setPrioritySet(false);
                     setTimeSet(false);
