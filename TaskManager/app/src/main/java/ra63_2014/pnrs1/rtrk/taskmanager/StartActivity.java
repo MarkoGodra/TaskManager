@@ -2,11 +2,10 @@ package ra63_2014.pnrs1.rtrk.taskmanager;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -24,7 +23,7 @@ public class StartActivity extends AppCompatActivity {
 
         adapter = new TaskAdapter(getBaseContext());
 
-        listView = (ListView)findViewById(R.id.listView);
+        listView = (ListView) findViewById(R.id.listView);
         btnNoviZad = (Button) findViewById(R.id.button1);
         btnStat = (Button) findViewById(R.id.button2);
 
@@ -39,6 +38,17 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 proceedOnStatsActivity();
+            }
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(getBaseContext(), NewTask.class);
+                Task task = (Task) listView.getItemAtPosition(position);
+                i.putExtra("zadatak_edit", task);
+                startActivity(i);
+                return true;
             }
         });
 
@@ -63,7 +73,7 @@ public class StartActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
-                Task task = (Task)data.getSerializableExtra(getResources().getString(R.string.result));
+                Task task = (Task) data.getSerializableExtra(getResources().getString(R.string.result));
                 adapter.addTask(task);
             }
         }

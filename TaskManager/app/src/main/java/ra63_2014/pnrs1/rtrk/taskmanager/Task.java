@@ -16,7 +16,7 @@ public class Task implements Serializable {
     private boolean reminder;
     private boolean zavrsen;
 
-    public Task(){
+    public Task() {
         ime = "";
         opis = "";
         prioritet = -1;
@@ -25,7 +25,7 @@ public class Task implements Serializable {
         zavrsen = false;
     }
 
-    public Task(String ime, String opis, int prioritet, Calendar calendar, boolean reminder, boolean zavrsen){
+    public Task(String ime, String opis, int prioritet, Calendar calendar, boolean reminder, boolean zavrsen) {
         this.ime = ime;
         this.opis = opis;
         this.prioritet = prioritet;

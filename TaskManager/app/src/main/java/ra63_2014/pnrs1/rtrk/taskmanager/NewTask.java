@@ -14,9 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Timer;
 
 public class NewTask extends AppCompatActivity {
 
@@ -42,6 +41,9 @@ public class NewTask extends AppCompatActivity {
     private Calendar calendar;
     private boolean zavrsen = false;
     private Calendar tempCal;
+    private Intent intent;
+    private boolean editPreview;
+    private Task task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +61,52 @@ public class NewTask extends AppCompatActivity {
         btnVreme = (Button) findViewById(R.id.btnVreme);
         btnDatum = (Button) findViewById(R.id.btnDatum);
         checkBoxPodseti = (CheckBox) findViewById(R.id.checkboxPodseti);
-        textViewDatum = (TextView)findViewById(R.id.textViewDatum);
-        textViewVreme = (TextView)findViewById(R.id.textViewVreme);
+        textViewDatum = (TextView) findViewById(R.id.textViewDatum);
+        textViewVreme = (TextView) findViewById(R.id.textViewVreme);
+
+        //TODO: here, i'll need to update data
 
         calendar = Calendar.getInstance();
         storageCalendar = Calendar.getInstance();
         tempCal = Calendar.getInstance();
+
+        intent = getIntent();
+        if (!intent.hasExtra("zadatak_edit")) {
+            editPreview = false;
+        } else {
+
+            //Reconstructing data of long clicked task
+
+            editPreview = true;
+            task = (Task) intent.getSerializableExtra("zadatak_edit");
+            btnDodaj.setText(R.string.sacuvaj);
+            btnOtkazi.setText(R.string.obrisi);
+            editTextIme.setText(task.getIme());
+            editTextOpis.setText(task.getOpis());
+            storageCalendar = task.getCalendar();
+            textViewDatum.setText(storageCalendar.get(Calendar.DAY_OF_MONTH) + ""
+                    + "/" + storageCalendar.get(Calendar.MONTH) + ""
+                    + "/" + storageCalendar.get(Calendar.YEAR) + "");
+            textViewVreme.setText(storageCalendar.get(Calendar.HOUR_OF_DAY) + ""
+                    + ":" + storageCalendar.get(Calendar.MINUTE) + "");
+            if (task.isReminder())
+                checkBoxPodseti.setChecked(true);
+
+            switch (task.getPrioritet()) {
+                case 3:
+                    btnGrn.setEnabled(false);
+                    btnYlw.setEnabled(false);
+                    break;
+                case 2:
+                    btnRed.setEnabled(false);
+                    btnGrn.setEnabled(false);
+                    break;
+                case 1:
+                    btnRed.setEnabled(false);
+                    btnYlw.setEnabled(false);
+                    break;
+            }
+        }
 
         onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -141,43 +183,51 @@ public class NewTask extends AppCompatActivity {
         btnDodaj.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //If noramal new task creating
+                if (!editPreview) {
+                    if (isTimeSet() && isDateSet() && isPrioritySet()
+                            && !editTextIme.getText().toString().isEmpty()
+                            && !editTextOpis.getText().toString().isEmpty()) {
 
-                if(isTimeSet() && isDateSet() && isPrioritySet()
-                        && !editTextIme.getText().toString().isEmpty()
-                        && !editTextOpis.getText().toString().isEmpty()){
+                        if (storageCalendar.getTimeInMillis() > tempCal.getTimeInMillis())
+                            zavrsen = false;
+                        else
+                            zavrsen = true;
 
-                    if(storageCalendar.getTimeInMillis() > tempCal.getTimeInMillis())
-                        zavrsen = false;
-                    else
-                        zavrsen = true;
+                        task = new Task(editTextIme.getText().toString(), editTextOpis.getText().toString(),
+                                priority, storageCalendar, checkBoxPodseti.isChecked(), zavrsen);
 
+                        setPrioritySet(false);
+                        setTimeSet(false);
+                        setDateSet(false);
+                        showToastCreated();
 
-                    Task task = new Task(editTextIme.getText().toString(), editTextOpis.getText().toString(),
-                            priority, storageCalendar, checkBoxPodseti.isChecked(), zavrsen);
+                        Intent i = new Intent(getBaseContext(), StartActivity.class);
 
-                    setPrioritySet(false);
-                    setTimeSet(false);
-                    setDateSet(false);
-                    showToastCreated();
+                        i.putExtra(getResources().getString(R.string.result), task);
+                        setResult(Activity.RESULT_OK, i);
+                        finish();
 
-                    Intent i = new Intent(getBaseContext(), StartActivity.class);
+                    } else {
+                        showToastInvalid();
+                    }
+                } else { //If it is in preview and editing mode
 
-                    i.putExtra(getResources().getString(R.string.result), task);
-                    setResult(Activity.RESULT_OK, i);
-                    finish();
+                    //TODO: update data here
 
-
-                } else {
-                    showToastInvalid();
                 }
-
             }
         });
 
         btnOtkazi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                //Just otkazi NO preview mode
+                if (!editPreview)
+                    finish();
+                else { // Editing and previewing mode
+                    //TODO: will need to delete task from list here
+                }
             }
         });
     }
@@ -202,13 +252,11 @@ public class NewTask extends AppCompatActivity {
 
     }
 
-
     public void showToastTime(int hour, int minute) {
         String msg = "Vreme isteka : " + Integer.toString(hour) + "h : " + Integer.toString(minute) + "m";
         Toast.makeText(this, msg, Toast.LENGTH_LONG)
                 .show();
     }
-
 
     public void showToastDate(int year, int month, int day) {
         String msg = "Datum isteka : " + Integer.toString(day) + "/" + Integer.toString(month) + "/" + Integer.toString(year);
@@ -216,25 +264,21 @@ public class NewTask extends AppCompatActivity {
                 .show();
     }
 
-
     public void proceedOnStartActivity() {
         Intent intent = new Intent(NewTask.this, StartActivity.class);
         startActivity(intent);
         finish();
     }
 
-
     public void showToastCreated() {
         Toast.makeText(this, "Zadatak dodat", Toast.LENGTH_SHORT)
                 .show();
     }
 
-
     public void showToastCanceled() {
         Toast.makeText(this, "Otkazano", Toast.LENGTH_SHORT)
                 .show();
     }
-
 
     public void showToastInvalid() {
         Toast.makeText(this, "Popuniti sva polja", Toast.LENGTH_SHORT)
@@ -246,7 +290,6 @@ public class NewTask extends AppCompatActivity {
         Setters and getters
 
      */
-
 
     public boolean isTimeSet() {
         return timeSet;

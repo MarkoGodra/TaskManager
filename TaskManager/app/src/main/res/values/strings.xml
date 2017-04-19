@@ -13,4 +13,6 @@
     <string name="datumIsteka">Datum isteka</string>
     <string name="sampleText">Sample Text</string>
     <string name="result">result</string>
+    <string name="sacuvaj">Sacuvaj</string>
+    <string name="obrisi">Obrisi</string>
 </resources>
