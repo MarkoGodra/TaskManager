@@ -9,5 +9,8 @@ public class Stats extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
+
+        StatisticsView statisticsView = new StatisticsView(getBaseContext());
+        setContentView(statisticsView);
     }
 }

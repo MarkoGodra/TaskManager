@@ -148,10 +148,10 @@ public class TaskAdapter extends BaseAdapter {
         else
             holder.urgButton.setBackgroundColor(context.getResources().getColor(R.color.white));
 
-        holder.checkBox.setChecked(task.isZavrsen());
-
         if (task.isZavrsen())
             holder.ime.setPaintFlags(holder.ime.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+        holder.checkBox.setChecked(task.isZavrsen());
 
         return view;
     }
