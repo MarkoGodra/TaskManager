@@ -45,9 +45,9 @@ public class StatisticsView extends View {
     private String yellowPercentage;
     private String greenPercentage;
 
-    private final String hpTask = "Zadaci visokog prioriteta";
-    private final String mpTask = "Zadaci srednjeg prioriteta";
-    private final String lpTask = "Zadaci niskog prioriteta";
+    private final String hpTask = "Visoki prioritet";
+    private final String mpTask = "Srednji prioritet";
+    private final String lpTask = "Niski prioritet";
 
     public StatisticsView(Context context) {
         super(context);
@@ -104,23 +104,51 @@ public class StatisticsView extends View {
             Draw text
          */
         paint.setColor(Color.BLACK);
-        paint.setTextSize(40);
+
+        /*
+            For text scaling (Because of different resolutions on d
+            devices)
+         */
+        paint.setTextSize(16 * getResources().getDisplayMetrics().density);
 
         /*
             Text under circles
          */
-        canvas.drawText(hpTask, 0, hpTask.length(), redCircle.centerX() - 220, redCircle.centerY() + 200, paint);
-        canvas.drawText(mpTask, 0, mpTask.length(), yellowCircle.centerX() - 240, yellowCircle.centerY() + 200, paint);
-        canvas.drawText(lpTask, 0, lpTask.length(), greenCircle.centerX() - 220, greenCircle.centerY() + 200, paint);
+        canvas.drawText(hpTask, 0, hpTask.length(),
+                redCircle.centerX() - 50 * getResources().getDisplayMetrics().density,
+                redCircle.centerY() + 85 * getResources().getDisplayMetrics().density,
+                paint); // 220, 200
+        canvas.drawText(mpTask, 0, mpTask.length(),
+                yellowCircle.centerX() - 50 * getResources().getDisplayMetrics().density,
+                yellowCircle.centerY() + 85 * getResources().getDisplayMetrics().density,
+                paint);
+        canvas.drawText(lpTask, 0, lpTask.length(),
+                greenCircle.centerX() - 50 * getResources().getDisplayMetrics().density,
+                greenCircle.centerY() + 85 * getResources().getDisplayMetrics().density,
+                paint);
 
-        paint.setTextSize(80);
+        /*
+            For text scaling (Because of different resolutions on d
+            devices)
+         */
+        paint.setTextSize(32 * getResources().getDisplayMetrics().density);
 
         /*
             Percentage string
          */
-        canvas.drawText(redPercentage, 0, redPercentage.length(), redCircle.centerX() - 70, redCircle.centerY() + 30, paint);
-        canvas.drawText(yellowPercentage, 0, yellowPercentage.length(), yellowCircle.centerX() - 70, yellowCircle.centerY() + 30, paint);
-        canvas.drawText(greenPercentage, 0, greenPercentage.length(), greenCircle.centerX() - 70, greenCircle.centerY() + 30, paint);
+        canvas.drawText(redPercentage, 0, redPercentage.length(),
+                redCircle.centerX() - 20 * getResources().getDisplayMetrics().density,
+                redCircle.centerY() + 11 * getResources().getDisplayMetrics().density,
+                paint);
+        canvas.drawText(yellowPercentage, 0,
+                yellowPercentage.length(),
+                yellowCircle.centerX() - 20 * getResources().getDisplayMetrics().density,
+                yellowCircle.centerY() + 11 * getResources().getDisplayMetrics().density,
+                paint);
+        canvas.drawText(greenPercentage, 0, greenPercentage.length(),
+                greenCircle.centerX() - 20 * getResources().getDisplayMetrics().density,
+                greenCircle.centerY() + 11 * getResources().getDisplayMetrics().density,
+                paint);
 
     }
 
