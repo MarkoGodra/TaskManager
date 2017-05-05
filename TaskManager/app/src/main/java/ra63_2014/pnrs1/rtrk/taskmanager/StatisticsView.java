@@ -38,8 +38,9 @@ public class StatisticsView extends View {
     private RectF redCircle = new RectF();
     private RectF yellowCircle = new RectF();
     private RectF greenCircle = new RectF();
+    private RectF buttonBack = new RectF();
 
-    private Animation animation = new Animation();
+    MyAnimation animation = new MyAnimation();
 
     private String redPercentage;
     private String yellowPercentage;
@@ -74,7 +75,6 @@ public class StatisticsView extends View {
                 canvas.getHeight() * 5 / 10,
                 canvas.getWidth() * 11 / 12,
                 canvas.getHeight() * 7 / 10);
-
 
         /*
             Draw red circle animation
@@ -150,9 +150,16 @@ public class StatisticsView extends View {
                 greenCircle.centerY() + 11 * getResources().getDisplayMetrics().density,
                 paint);
 
+        paint.setColor(Color.GRAY);
+
     }
 
-    private class Animation extends AsyncTask<Void, Void, Void> {
+    public class MyAnimation extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -176,6 +183,9 @@ public class StatisticsView extends View {
 
                 postInvalidate();
                 SystemClock.sleep(25);
+
+                if(isCancelled())
+                    break;
 
             }
 
