@@ -44,9 +44,5 @@ public class Stats extends AppCompatActivity {
                 finish();
             }
         });
-
-
-
-
     }
 }

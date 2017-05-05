@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -89,8 +90,8 @@ public class TaskAdapter extends BaseAdapter {
         cal1 = Calendar.getInstance();
         cal2 = Calendar.getInstance();
 
-        Task task = (Task) getItem(position);
-        ViewHolder holder = (ViewHolder) view.getTag();
+        final Task task = (Task) getItem(position);
+        final ViewHolder holder = (ViewHolder) view.getTag();
         holder.ime.setText(task.getIme());
         tempCalendar = task.getCalendar();
         date = task.getCalendar().getTime();
@@ -148,8 +149,22 @@ public class TaskAdapter extends BaseAdapter {
         else
             holder.urgButton.setBackgroundColor(context.getResources().getColor(R.color.white));
 
-        if (task.isZavrsen())
-            holder.ime.setPaintFlags(holder.ime.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    holder.ime.setPaintFlags(holder.ime.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    task.setZavrsen(true);
+                } else {
+                    holder.ime.setPaintFlags(holder.ime.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+                    task.setZavrsen(false);
+                }
+
+
+            }
+        });
+
 
         holder.checkBox.setChecked(task.isZavrsen());
 
