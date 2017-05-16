@@ -15,4 +15,8 @@
     <string name="result">result</string>
     <string name="sacuvaj">Sacuvaj</string>
     <string name="obrisi">Obrisi</string>
+    <string name="vp">Visoki prioritet</string>
+    <string name="sp">Srednji prioritet</string>
+    <string name="np">Niski prioritet</string>
+    <string name="Nazad">Nazad</string>
 </resources>

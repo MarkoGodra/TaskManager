@@ -1,5 +1,6 @@
 package ra63_2014.pnrs1.rtrk.taskmanager;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,7 +41,7 @@ public class Stats extends AppCompatActivity {
             public void onClick(View v) {
                 statisticsView.animation.cancel(true);
                 Intent intent = new Intent(getBaseContext(), StartActivity.class);
-                startActivity(intent);
+                setResult(Activity.RESULT_OK, intent);
                 finish();
             }
         });

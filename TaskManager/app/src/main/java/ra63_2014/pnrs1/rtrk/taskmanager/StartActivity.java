@@ -1,7 +1,12 @@
 package ra63_2014.pnrs1.rtrk.taskmanager;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,17 +14,24 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-public class StartActivity extends AppCompatActivity {
+public class StartActivity extends AppCompatActivity implements ServiceConnection {
 
     private Button btnNoviZad;
     private Button btnStat;
     private ListView listView;
     private TaskAdapter adapter;
 
+    public static NotificationManager notificationManager;
+    private ITimerAidlInterface timerInterface = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
+        notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent i = new Intent(getBaseContext(), TimerService.class);
+        bindService(i, StartActivity.this, BIND_AUTO_CREATE);
 
         adapter = new TaskAdapter(getBaseContext());
 
@@ -79,4 +91,13 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        timerInterface = ITimerAidlInterface.Stub.asInterface(service);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+
+    }
 }

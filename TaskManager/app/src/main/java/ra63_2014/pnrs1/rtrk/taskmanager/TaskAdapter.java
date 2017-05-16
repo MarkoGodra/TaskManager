@@ -22,7 +22,7 @@ import java.util.Date;
 public class TaskAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<Task> list;
+    private static ArrayList<Task> list;
     private Date date;
     private Calendar tempCalendar;
     private Calendar cal1;
@@ -44,6 +44,10 @@ public class TaskAdapter extends BaseAdapter {
     public void addTask(Task task) {
         list.add(task);
         notifyDataSetChanged();
+    }
+
+    public static ArrayList<Task> getList(){
+        return list;
     }
 
     @Override

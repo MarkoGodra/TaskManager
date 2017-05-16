@@ -10,7 +10,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nazad"
+        android:text="@string/Nazad"
         android:id="@+id/btnNazad"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>

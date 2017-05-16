@@ -46,9 +46,9 @@ public class StatisticsView extends View {
     private String yellowPercentage;
     private String greenPercentage;
 
-    private final String hpTask = "Visoki prioritet";
-    private final String mpTask = "Srednji prioritet";
-    private final String lpTask = "Niski prioritet";
+    private String hpTask;
+    private String mpTask;
+    private String lpTask;
 
     public StatisticsView(Context context) {
         super(context);
@@ -59,6 +59,11 @@ public class StatisticsView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        hpTask = getResources().getString(R.string.vp);
+        mpTask = getResources().getString(R.string.sp);
+        lpTask = getResources().getString(R.string.np);
+
 
         /*
             Rectangles on which circles will be placed
