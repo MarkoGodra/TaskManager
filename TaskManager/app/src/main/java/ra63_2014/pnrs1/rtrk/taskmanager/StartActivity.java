@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.os.RemoteException;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -87,6 +89,17 @@ public class StartActivity extends AppCompatActivity implements ServiceConnectio
             if (resultCode == Activity.RESULT_OK) {
                 Task task = (Task) data.getSerializableExtra(getResources().getString(R.string.result));
                 adapter.addTask(task);
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(StartActivity.this)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("Task Manager")
+                        .setContentText(task.getIme() + " - dodat");
+
+                timerInterface = new TimerClass(builder);
+                try {
+                    timerInterface.notifyTaskAdded(task.getIme());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
