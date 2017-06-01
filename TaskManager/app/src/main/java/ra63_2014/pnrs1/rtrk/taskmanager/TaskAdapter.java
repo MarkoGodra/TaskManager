@@ -118,6 +118,10 @@ public class TaskAdapter extends BaseAdapter {
         cal1.add(Calendar.DAY_OF_YEAR, 1);
         cal2.add(Calendar.DAY_OF_YEAR, 7);
 
+        if(tempCalendar.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()){
+            task.setZavrsen(true);
+        }
+
         if (tempCalendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) {
             holder.date.setText("Danas u " + tempCalendar.get(Calendar.HOUR_OF_DAY) + "" + " : " + tempCalendar.get(Calendar.MINUTE) + "");
         } else if (tempCalendar.get(Calendar.DAY_OF_YEAR) == cal1.get(Calendar.DAY_OF_YEAR)) {

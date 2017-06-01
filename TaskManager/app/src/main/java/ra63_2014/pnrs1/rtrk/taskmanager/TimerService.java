@@ -17,18 +17,47 @@ public class TimerService extends Service {
 
     private ArrayList<Task> taskList = new ArrayList<>();
     private IBinder binder = new ReminderBinder();
+    private DatabaseHelper db;
 
     private static int REMINDER_ID = 5;
 
     public TimerService() {
+        db = new DatabaseHelper(this);
         final Handler handler = new Handler();
         Runnable thread = new Runnable() {
             @Override
             public void run() {
+                taskList.clear();
+
+                //Log.d("dbg ", "\n######## NOVA ITERACIJA ######\n");
+
+                Task[] tasks = db.readTasks();
+                for(int i = 0; i < tasks.length; i++){
+//                    Log.d("dbg ", tasks[i].getIme().toString() + " vreme isteka : "
+//                            + tasks[i].getCalendar().get(Calendar.HOUR_OF_DAY )+ "" + "/"
+//                            + tasks[i].getCalendar().get(Calendar.MINUTE) + "" + "\n" + " Reminder "
+//                            + tasks[i].isReminder() + "" + " zavrsen : "
+//                            + tasks[i].isZavrsen() + "");
+                    taskList.add(tasks[i]);
+                }
+
                 for (Task task : taskList) {
-                    if (task.isReminder()) {
-                        Calendar cal = task.getCalendar();
-                        Calendar cal_now = Calendar.getInstance();
+
+                    Calendar cal = task.getCalendar();
+                    Calendar cal_now = Calendar.getInstance();
+
+                    if(cal.getTimeInMillis() - cal_now.getTimeInMillis() <= 0){
+                        task.setZavrsen(true);
+                        task.setReminder(false);
+                        db.update(task, task.getIme().toString(),
+                                task.getOpis().toString(),
+                                task.getCalendar(),
+                                task.getPrioritet(),
+                                task.isZavrsen(),
+                                task.isReminder());
+                    }
+
+                    if (task.isReminder() && !task.isZavrsen()) {
 
                         if (cal.getTimeInMillis() - cal_now.getTimeInMillis() < 900000) {
                             NotificationCompat.Builder builder = new NotificationCompat.Builder(TimerService.this)
@@ -38,7 +67,14 @@ public class TimerService extends Service {
 
                             StartActivity.notificationManager.notify(REMINDER_ID, builder.build());
                             task.setReminder(false);
+                            db.update(task, task.getIme().toString(),
+                                    task.getOpis().toString(),
+                                    task.getCalendar(),
+                                    task.getPrioritet(),
+                                    task.isZavrsen(),
+                                    task.isReminder());
                         }
+
                     }
                 }
                 handler.postDelayed(this, 60000);
@@ -76,8 +112,21 @@ public class TimerService extends Service {
     public void update(Task[] tasks) {
         taskList.clear();
 
+//        if(taskList.isEmpty()) {
+//            Log.d("timer_service", "local task list cleared");
+//        }
+
         for(int i = 0; i < tasks.length; i++) {
+            //Log.d("timer_service ", tasks[i].getIme().toString() + " Added to the local list");
             taskList.add(tasks[i]);
         }
+
+        //Log.d("\ntimer_service", "Tasks in local list");
+//        for(Task task : taskList){
+//            Log.d("timer_service ", task.getIme().toString() + " vreme isteka : "
+//                    + task.getCalendar().get(Calendar.HOUR_OF_DAY )+ "" + "/"
+//                    + task.getCalendar().get(Calendar.MINUTE) + "" + "\n" + " Reminder "
+//                    + task.isReminder() + "");
+//        }
     }
 }

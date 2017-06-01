@@ -100,16 +100,16 @@ public class StartActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
 
-        Log.d("DEBUG", "usao u on resume");
+        //Log.d("DEBUG", "usao u on resume");
 
         Task[] tasks = db.readTasks();
-        if(tasks != null) {
-            for(int ii = 0; ii < tasks.length; ii++) {
-                Log.d("Database items", tasks[ii].getIme().toString() + " Finished" + tasks[ii].isZavrsen() + "");
-            }
-        } else {
-            Log.d("Database items", "Databse is empty");
-        }
+//        if(tasks != null) {
+//            for(int ii = 0; ii < tasks.length; ii++) {
+//                Log.d("Database items", tasks[ii].getIme().toString() + " Finished" + tasks[ii].isZavrsen() + "");
+//            }
+//        } else {
+//            Log.d("Database items", "Databse is empty");
+//        }
 
 
         adapter.update(tasks);
@@ -152,6 +152,7 @@ public class StartActivity extends AppCompatActivity{
                 }
                 Task[] tasks = db.readTasks();
                 adapter.update(tasks);
+                timerService.update(tasks);
             }
         }
     }
