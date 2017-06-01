@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -44,12 +46,19 @@ public class NewTask extends AppCompatActivity {
     private Intent intent;
     private boolean editPreview;
     private Task task;
+    private DatabaseHelper db;
+    private String ime;
+    private String opis;
+    private boolean reminder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_task);
+
+        db = new DatabaseHelper(this);
 
         editTextIme = (EditText) findViewById(R.id.editTxtIme);
         editTextOpis = (EditText) findViewById(R.id.editTxtOpis);
@@ -82,6 +91,11 @@ public class NewTask extends AppCompatActivity {
             btnDodaj.setText(R.string.sacuvaj);
             btnOtkazi.setText(R.string.obrisi);
             editTextIme.setText(task.getIme());
+            ime = task.getIme().toString();
+            opis = task.getOpis().toString();
+            calendar = task.getCalendar();
+            reminder = task.isReminder();
+            zavrsen = task.isZavrsen();
             editTextOpis.setText(task.getOpis());
             storageCalendar = task.getCalendar();
             textViewDatum.setText(storageCalendar.get(Calendar.DAY_OF_MONTH) + ""
@@ -96,14 +110,17 @@ public class NewTask extends AppCompatActivity {
                 case 3:
                     btnGrn.setEnabled(false);
                     btnYlw.setEnabled(false);
+                    priority = 3;
                     break;
                 case 2:
                     btnRed.setEnabled(false);
                     btnGrn.setEnabled(false);
+                    priority = 2;
                     break;
                 case 1:
                     btnRed.setEnabled(false);
                     btnYlw.setEnabled(false);
+                    priority = 1;
                     break;
             }
         }
@@ -214,6 +231,43 @@ public class NewTask extends AppCompatActivity {
                 } else { //If it is in preview and editing mode
 
                     //TODO: update data here
+                    if (isTimeSet() && isDateSet() && isPrioritySet()
+                            && !editTextIme.getText().toString().isEmpty()
+                            && !editTextOpis.getText().toString().isEmpty()){
+
+                        if (storageCalendar.getTimeInMillis() > tempCal.getTimeInMillis())
+                            zavrsen = false;
+                        else
+                            zavrsen = true;
+
+                        if (checkBoxPodseti.isChecked()){
+                            reminder = true;
+                        } else {
+                            reminder = false;
+                        }
+
+                        db.update(task, editTextIme.getText().toString(), editTextOpis.getText().toString(),
+                                calendar,
+                                priority,
+                                zavrsen,
+                                reminder);
+
+//                        task = new Task(editTextIme.getText().toString(), editTextOpis.getText().toString(),
+//                                priority, storageCalendar, checkBoxPodseti.isChecked(), zavrsen);
+//
+//                        setPrioritySet(false);
+//                        setTimeSet(false);
+//                        setDateSet(false);
+//                        showToastCreated();
+
+                        Intent i = new Intent(getBaseContext(), StartActivity.class);
+//                        i.putExtra(getResources().getString(R.string.result), task);
+                        setResult(Activity.RESULT_OK, i);
+                        finish();
+
+                    } else {
+                        showToastInvalid();
+                    }
 
                 }
             }
@@ -226,7 +280,13 @@ public class NewTask extends AppCompatActivity {
                 if (!editPreview)
                     finish();
                 else { // Editing and previewing mode
-                    //TODO: will need to delete task from list here
+                    //TODO: will need to delete task from list hereSS
+
+                    db.deleteTask(task.getIme());
+
+                    Intent i = new Intent(getBaseContext(), StartActivity.class);
+                    setResult(Activity.RESULT_OK, i);
+                    finish();
                 }
             }
         });

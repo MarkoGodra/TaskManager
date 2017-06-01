@@ -11,31 +11,56 @@ import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-public class StartActivity extends AppCompatActivity implements ServiceConnection {
+import java.util.ArrayList;
+
+public class StartActivity extends AppCompatActivity{
 
     private Button btnNoviZad;
     private Button btnStat;
     private ListView listView;
     private TaskAdapter adapter;
+    private TimerService timerService;
+    private ArrayList<Task> tasks = new ArrayList<>();
+    private DatabaseHelper db;
 
     public static NotificationManager notificationManager;
-    private ITimerAidlInterface timerInterface = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
+        tasks = TaskAdapter.getList();
+
         notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         Intent i = new Intent(getBaseContext(), TimerService.class);
-        bindService(i, StartActivity.this, BIND_AUTO_CREATE);
+        i.putExtra("Task", tasks);
+
+
+
+        ServiceConnection myServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                timerService = ((TimerService.ReminderBinder) service).getService();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
+
+        bindService(i, myServiceConnection, BIND_AUTO_CREATE);
 
         adapter = new TaskAdapter(getBaseContext());
+        db = new DatabaseHelper(this);
+
 
         listView = (ListView) findViewById(R.id.listView);
         btnNoviZad = (Button) findViewById(R.id.button1);
@@ -70,6 +95,23 @@ public class StartActivity extends AppCompatActivity implements ServiceConnectio
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Task[] tasks = db.readTasks();
+        if(tasks != null) {
+            for(int ii = 0; ii < tasks.length; ii++) {
+                Log.d("Database items", tasks[ii].getIme().toString());
+            }
+        } else {
+            Log.d("Database items", "Databse is empty");
+        }
+
+
+        adapter.update(tasks);
+    }
+
     public void proceedOnAddActivity() {
         Intent i = new Intent(getBaseContext(), NewTask.class);
         startActivityForResult(i, 1);
@@ -87,30 +129,29 @@ public class StartActivity extends AppCompatActivity implements ServiceConnectio
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
-                Task task = (Task) data.getSerializableExtra(getResources().getString(R.string.result));
-                adapter.addTask(task);
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(StartActivity.this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("Task Manager")
-                        .setContentText(task.getIme() + " - dodat");
 
-                timerInterface = new TimerClass(builder);
-                try {
-                    timerInterface.notifyTaskAdded(task.getIme());
-                } catch (RemoteException e) {
-                    e.printStackTrace();
+                if (data.hasExtra("result")) {
+
+                    Task task = (Task) data.getSerializableExtra(getResources().getString(R.string.result));
+                    //adapter.addTask(task);
+                    db.insert(task);
+                    Task[] tasks = db.readTasks();
+                    adapter.update(tasks);
+
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(StartActivity.this)
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setContentTitle("Task Manager")
+                            .setContentText(task.getIme() + " - dodat");
+
+                    notificationManager.notify(5, builder.build());
+
+                    timerService.update(tasks);
                 }
+                Task[] tasks = db.readTasks();
+                adapter.update(tasks);
             }
         }
     }
 
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-        timerInterface = ITimerAidlInterface.Stub.asInterface(service);
-    }
 
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-
-    }
 }

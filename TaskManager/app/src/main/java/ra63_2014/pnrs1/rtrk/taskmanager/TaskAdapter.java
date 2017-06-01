@@ -2,6 +2,7 @@ package ra63_2014.pnrs1.rtrk.taskmanager;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ import java.util.Date;
 public class TaskAdapter extends BaseAdapter {
 
     private Context context;
-    private static ArrayList<Task> list;
+    private static ArrayList<Task> list = new ArrayList<>();
     private Date date;
     private Calendar tempCalendar;
     private Calendar cal1;
@@ -67,6 +68,17 @@ public class TaskAdapter extends BaseAdapter {
         return rv;
     }
 
+    public void update(Task[] tasks) {
+        list.clear();
+        if(tasks != null) {
+            for(Task task : tasks) {
+                list.add(task);
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
     @Override
     public long getItemId(int position) {
         return position;
@@ -75,6 +87,8 @@ public class TaskAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
+
+        Log.d("Deleting", "usao je ovde");
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
