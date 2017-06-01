@@ -35,6 +35,7 @@ public class StartActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        db = new DatabaseHelper(this);
 
         tasks = TaskAdapter.getList();
 
@@ -59,7 +60,7 @@ public class StartActivity extends AppCompatActivity{
         bindService(i, myServiceConnection, BIND_AUTO_CREATE);
 
         adapter = new TaskAdapter(getBaseContext());
-        db = new DatabaseHelper(this);
+
 
 
         listView = (ListView) findViewById(R.id.listView);
@@ -99,10 +100,12 @@ public class StartActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
 
+        Log.d("DEBUG", "usao u on resume");
+
         Task[] tasks = db.readTasks();
         if(tasks != null) {
             for(int ii = 0; ii < tasks.length; ii++) {
-                Log.d("Database items", tasks[ii].getIme().toString());
+                Log.d("Database items", tasks[ii].getIme().toString() + " Finished" + tasks[ii].isZavrsen() + "");
             }
         } else {
             Log.d("Database items", "Databse is empty");

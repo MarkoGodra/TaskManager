@@ -28,6 +28,7 @@ public class TaskAdapter extends BaseAdapter {
     private Calendar tempCalendar;
     private Calendar cal1;
     private Calendar cal2;
+    private DatabaseHelper db;
 
     private class ViewHolder {
         public TextView ime = null;
@@ -38,6 +39,7 @@ public class TaskAdapter extends BaseAdapter {
     }
 
     public TaskAdapter(Context context) {
+        db = new DatabaseHelper(context);
         this.context = context;
         list = new ArrayList<Task>();
     }
@@ -174,9 +176,20 @@ public class TaskAdapter extends BaseAdapter {
                 if (isChecked) {
                     holder.ime.setPaintFlags(holder.ime.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     task.setZavrsen(true);
+                    db.update(task, task.getIme().toString(), task.getOpis().toString(),
+                            task.getCalendar(),
+                            task.getPrioritet(),
+                            task.isZavrsen(),
+                            task.isReminder());
+
                 } else {
                     holder.ime.setPaintFlags(holder.ime.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
                     task.setZavrsen(false);
+                    db.update(task, task.getIme().toString(), task.getOpis().toString(),
+                            task.getCalendar(),
+                            task.getPrioritet(),
+                            task.isZavrsen(),
+                            task.isReminder());
                 }
 
 

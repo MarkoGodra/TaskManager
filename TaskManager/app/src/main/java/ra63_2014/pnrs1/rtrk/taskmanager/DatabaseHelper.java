@@ -20,27 +20,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "tasks.db";
     public static final String TABLE_NAME = "Tasks";
     public static final String COLUMN_NAME = "TaskName";
-    public static final String COLUMN_TIME = "TaskTime";
     public static final String COLUMN_DESCRIPTION = "TaskDescription";
     public static final String COLUMN_REMINDER = "TaskReminder";
     public static final String COLUMN_PRIORITY = "TaskPriority";
     public static final String COLUMN_DONE = "TaskDone";
+    public static final String COLUMN_DAY = "TaskDay";
+    public static final String COLUMN_MONTH = "TaskMonth";
+    public static final String COLUMN_YEAR = "TaskYear";
+    public static final String COLUMN_HOUR = "TaskHour";
+    public static final String COLUMN_MINUTE = "TaskMinute";
 
     public DatabaseHelper(Context context) {
         super(context,DATABASE_NAME, null, DATABASE_VERSION);
         Log.d("qwerty", "database_created");
+        //onCreate(getReadableDatabase());
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.d("DEBUG", "creating DB");
         Log.d("database", "Creating");
         db.execSQL("CREATE TABLE " + TABLE_NAME + " ("+COLUMN_NAME+" TEXT, "
-                +COLUMN_TIME+" INT, "
                 +COLUMN_DESCRIPTION+" TEXT, "
                 +COLUMN_REMINDER+" INT, "
+                +COLUMN_DAY+" INT, "
+                +COLUMN_MONTH+" INT, "
+                +COLUMN_YEAR+" INT, "
+                +COLUMN_HOUR+" INT, "
+                +COLUMN_MINUTE+" INT, "
                 +COLUMN_PRIORITY+" INT, "
                 +COLUMN_DONE+" INT);");
         Log.d("Database", "created");
+        Log.d("DEBUG", "DB created");
     }
 
     @Override
@@ -48,14 +59,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insert(Task mTask)
-    {
+    public void insert(Task mTask) {
+        /*
+
+            storageCalendar.set(Calendar.MINUTE, minute);
+                storageCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                 storageCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                storageCalendar.set(Calendar.MONTH, month);
+                storageCalendar.set(Calendar.YEAR, year);
+
+
+         */
+
+        Calendar storageCalendar = mTask.getCalendar();
+        int minutes = storageCalendar.get(Calendar.MINUTE);
+        int hours = storageCalendar.get(Calendar.HOUR_OF_DAY);
+        int day = storageCalendar.get(Calendar.DAY_OF_MONTH);
+        int month = storageCalendar.get(Calendar.MONTH);
+        int year = storageCalendar.get(Calendar.YEAR);
+
+
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         Log.d("prioitet", Integer.toString(mTask.getPrioritet()));
         values.put(COLUMN_NAME, mTask.getIme());
         values.put(COLUMN_PRIORITY, mTask.getPrioritet());
-        values.put(COLUMN_TIME, mTask.getCalendar().getTimeInMillis());
+        values.put(COLUMN_DAY, day);
+        values.put(COLUMN_MONTH, month);
+        values.put(COLUMN_YEAR, year);
+        values.put(COLUMN_HOUR, hours);
+        values.put(COLUMN_MINUTE, minutes);
         values.put(COLUMN_REMINDER, mTask.isReminder() ? 1 : 0);
         values.put(COLUMN_DESCRIPTION, mTask.getOpis());
         values.put(COLUMN_DONE, mTask.isZavrsen() ? 1 : 0);
@@ -66,6 +99,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Task[] readTasks() {
+        Log.d("DEBUG", "usao u read tasks");
+
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null, null);
 
@@ -114,16 +149,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String opis = cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION));
         int prioritet = cursor.getInt(cursor.getColumnIndex(COLUMN_PRIORITY));
         int zavrsen = cursor.getInt(cursor.getColumnIndex(COLUMN_DONE));
-        int vreme = cursor.getInt(cursor.getColumnIndex(COLUMN_TIME));
         int reminder = cursor.getInt(cursor.getColumnIndex(COLUMN_REMINDER));
+        int minute = cursor.getInt(cursor.getColumnIndex(COLUMN_MINUTE));
+        int dayOfMonth = cursor.getInt(cursor.getColumnIndex(COLUMN_DAY));
+        int hourOfDay = cursor.getInt(cursor.getColumnIndex(COLUMN_HOUR));
 
-//        Log.d("Zadatak - ime :", ime);
-//        Log.d("Zadatak - prioritet :", Integer.toString(prioritet) + "\n");
+        int month = cursor.getInt(cursor.getColumnIndex(COLUMN_MONTH));
+        int year = cursor.getInt(cursor.getColumnIndex(COLUMN_YEAR));
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(vreme);
 
-        Task task = new Task(ime, opis, prioritet, cal,
+        Calendar storageCalendar = Calendar.getInstance();
+        storageCalendar.set(Calendar.MINUTE, minute);
+        storageCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        storageCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        storageCalendar.set(Calendar.MONTH, month);
+        storageCalendar.set(Calendar.YEAR, year);
+
+        Task task = new Task(ime, opis, prioritet, storageCalendar,
                 reminder == 1 ? true : false,
                 zavrsen == 1 ? true : false);
 
