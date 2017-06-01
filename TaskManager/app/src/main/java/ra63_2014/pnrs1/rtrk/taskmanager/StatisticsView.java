@@ -23,9 +23,9 @@ public class StatisticsView extends View {
         database or whatever
 
      */
-    private int redCirclePercentage = 88;
-    private int greenCirclePercentage = 93;
-    private int yellowCirclePercentage = 81;
+    private int redCirclePercentage = 0;
+    private int greenCirclePercentage = 0;
+    private int yellowCirclePercentage = 0;
 
     /*
         Percentage of circle already drawn.
@@ -42,18 +42,34 @@ public class StatisticsView extends View {
 
     MyAnimation animation = new MyAnimation();
 
-    private String redPercentage;
-    private String yellowPercentage;
-    private String greenPercentage;
+    private String redPercentage = "0";
+    private String yellowPercentage = "0";
+    private String greenPercentage = "0";
 
     private String hpTask;
     private String mpTask;
     private String lpTask;
 
-    public StatisticsView(Context context) {
+    public StatisticsView(Context context, int RedPercentage, int YellowPercentage, int GreenPercentage) {
         super(context);
         paint = new Paint();
         animation.execute();
+        redCirclePercentage = RedPercentage;
+        yellowCirclePercentage = YellowPercentage;
+        greenCirclePercentage = GreenPercentage;
+
+        if(greenCirclePercentage < 1){
+            greenCirclePercentage = 0;
+        }
+
+        if(redCirclePercentage < 1){
+            redCirclePercentage = 0;
+        }
+
+        if(yellowCirclePercentage < 1){
+            yellowCirclePercentage = 0;
+        }
+
     }
 
     @Override

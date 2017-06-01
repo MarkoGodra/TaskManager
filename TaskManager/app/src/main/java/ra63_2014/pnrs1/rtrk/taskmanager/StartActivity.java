@@ -137,9 +137,12 @@ public class StartActivity extends AppCompatActivity{
 
                     Task task = (Task) data.getSerializableExtra(getResources().getString(R.string.result));
                     //adapter.addTask(task);
+
                     db.insert(task);
                     Task[] tasks = db.readTasks();
                     adapter.update(tasks);
+
+
 
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(StartActivity.this)
                             .setSmallIcon(R.mipmap.ic_launcher)
@@ -154,17 +157,18 @@ public class StartActivity extends AppCompatActivity{
 //                adapter.update(tasks);
 //                timerService.update(tasks);
                 else if(data.hasExtra("deleted")) {
-                    String ime = (String)data.getStringExtra("deleted");
+                    String ime = (String)data.getStringExtra("updated");
                     Task[] tasks = db.readTasks();
                     adapter.update(tasks);
                     timerService.update(tasks);
 
-                    NotificationCompat.Builder builder = new NotificationCompat.Builder(StartActivity.this)
+                    notificationManager.cancelAll();
+                    NotificationCompat.Builder builder1 = new NotificationCompat.Builder(StartActivity.this)
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setContentTitle("Task Manager")
-                            .setContentText(ime + "" + " - obrisan");
+                            .setContentText(ime + "" + " - obr");
 
-                    notificationManager.notify(4, builder.build());
+                    notificationManager.notify(5, builder1.build());
 
                     timerService.update(tasks);
                 }
@@ -174,15 +178,18 @@ public class StartActivity extends AppCompatActivity{
                     adapter.update(tasks);
                     timerService.update(tasks);
 
+                    notificationManager.cancelAll();
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(StartActivity.this)
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setContentTitle("Task Manager")
-                            .setContentText(ime + "" + " - azurirano");
+                            .setContentText(ime + "" + " - azu");
 
-                    notificationManager.notify(3, builder.build());
+                    notificationManager.notify(5, builder.build());
 
                     timerService.update(tasks);
                 }
+
+
             }
         }
     }
