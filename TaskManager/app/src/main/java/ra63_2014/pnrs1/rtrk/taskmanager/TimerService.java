@@ -32,13 +32,15 @@ public class TimerService extends Service {
                 //Log.d("dbg ", "\n######## NOVA ITERACIJA ######\n");
 
                 Task[] tasks = db.readTasks();
-                for(int i = 0; i < tasks.length; i++){
+                if(tasks != null) {
+                    for (int i = 0; i < tasks.length; i++) {
 //                    Log.d("dbg ", tasks[i].getIme().toString() + " vreme isteka : "
 //                            + tasks[i].getCalendar().get(Calendar.HOUR_OF_DAY )+ "" + "/"
 //                            + tasks[i].getCalendar().get(Calendar.MINUTE) + "" + "\n" + " Reminder "
 //                            + tasks[i].isReminder() + "" + " zavrsen : "
 //                            + tasks[i].isZavrsen() + "");
-                    taskList.add(tasks[i]);
+                        taskList.add(tasks[i]);
+                    }
                 }
 
                 for (Task task : taskList) {
@@ -82,9 +84,9 @@ public class TimerService extends Service {
         };
 
         handler.postDelayed(thread, 1000);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle("Task Manager");
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+//            .setSmallIcon(R.mipmap.ic_launcher)
+//            .setContentTitle("Task Manager");
 
 
     }

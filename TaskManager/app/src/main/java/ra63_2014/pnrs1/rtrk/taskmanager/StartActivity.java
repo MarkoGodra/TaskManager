@@ -103,13 +103,13 @@ public class StartActivity extends AppCompatActivity{
         //Log.d("DEBUG", "usao u on resume");
 
         Task[] tasks = db.readTasks();
-//        if(tasks != null) {
-//            for(int ii = 0; ii < tasks.length; ii++) {
-//                Log.d("Database items", tasks[ii].getIme().toString() + " Finished" + tasks[ii].isZavrsen() + "");
-//            }
-//        } else {
-//            Log.d("Database items", "Databse is empty");
-//        }
+        if(tasks != null) {
+            for(int ii = 0; ii < tasks.length; ii++) {
+                Log.d("Database items", tasks[ii].getIme().toString() + " Finished" + tasks[ii].isZavrsen() + "");
+            }
+        } else {
+            Log.d("Database items", "Databse is empty");
+        }
 
 
         adapter.update(tasks);
@@ -150,9 +150,39 @@ public class StartActivity extends AppCompatActivity{
 
                     timerService.update(tasks);
                 }
-                Task[] tasks = db.readTasks();
-                adapter.update(tasks);
-                timerService.update(tasks);
+//                Task[] tasks = db.readTasks();
+//                adapter.update(tasks);
+//                timerService.update(tasks);
+                else if(data.hasExtra("deleted")) {
+                    String ime = (String)data.getStringExtra("deleted");
+                    Task[] tasks = db.readTasks();
+                    adapter.update(tasks);
+                    timerService.update(tasks);
+
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(StartActivity.this)
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setContentTitle("Task Manager")
+                            .setContentText(ime + "" + " - obrisan");
+
+                    notificationManager.notify(4, builder.build());
+
+                    timerService.update(tasks);
+                }
+                else if(data.hasExtra("updated")) {
+                    String ime = (String)data.getStringExtra("updated");
+                    Task[] tasks = db.readTasks();
+                    adapter.update(tasks);
+                    timerService.update(tasks);
+
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(StartActivity.this)
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setContentTitle("Task Manager")
+                            .setContentText(ime + "" + " - azurirano");
+
+                    notificationManager.notify(3, builder.build());
+
+                    timerService.update(tasks);
+                }
             }
         }
     }

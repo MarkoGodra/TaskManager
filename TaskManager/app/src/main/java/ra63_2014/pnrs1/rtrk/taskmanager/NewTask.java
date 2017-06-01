@@ -262,6 +262,7 @@ public class NewTask extends AppCompatActivity {
 
                         Intent i = new Intent(getBaseContext(), StartActivity.class);
 //                        i.putExtra(getResources().getString(R.string.result), task);
+                        i.putExtra("updated", task.getIme().toString());
                         setResult(Activity.RESULT_OK, i);
                         finish();
 
@@ -285,6 +286,7 @@ public class NewTask extends AppCompatActivity {
                     db.deleteTask(task.getIme());
 
                     Intent i = new Intent(getBaseContext(), StartActivity.class);
+                    i.putExtra("deleted", task.getIme().toString());
                     setResult(Activity.RESULT_OK, i);
                     finish();
                 }
