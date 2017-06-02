@@ -87,7 +87,7 @@ public class StartActivity extends AppCompatActivity{
                 Intent i = new Intent(getBaseContext(), NewTask.class);
                 Task task = (Task) listView.getItemAtPosition(position);
                 i.putExtra("zadatak_edit", task);
-                startActivity(i);
+                startActivityForResult(i, 1);
                 return true;
             }
         });
@@ -157,7 +157,7 @@ public class StartActivity extends AppCompatActivity{
 //                adapter.update(tasks);
 //                timerService.update(tasks);
                 else if(data.hasExtra("deleted")) {
-                    String ime = (String)data.getStringExtra("updated");
+                    String ime = (String)data.getStringExtra("deleted");
                     Task[] tasks = db.readTasks();
                     adapter.update(tasks);
                     timerService.update(tasks);
@@ -166,7 +166,7 @@ public class StartActivity extends AppCompatActivity{
                     NotificationCompat.Builder builder1 = new NotificationCompat.Builder(StartActivity.this)
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setContentTitle("Task Manager")
-                            .setContentText(ime + "" + " - obr");
+                            .setContentText(ime + "" + " - obrisan");
 
                     notificationManager.notify(5, builder1.build());
 
@@ -182,7 +182,7 @@ public class StartActivity extends AppCompatActivity{
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(StartActivity.this)
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setContentTitle("Task Manager")
-                            .setContentText(ime + "" + " - azu");
+                            .setContentText(ime + "" + " - azuriran");
 
                     notificationManager.notify(5, builder.build());
 

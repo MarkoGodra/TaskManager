@@ -122,7 +122,15 @@ public class NewTask extends AppCompatActivity {
                     btnYlw.setEnabled(false);
                     priority = 1;
                     break;
+
+
             }
+
+            setTimeSet(true);
+            setDateSet(true);
+            setPrioritySet(true);
+
+
         }
 
         onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
