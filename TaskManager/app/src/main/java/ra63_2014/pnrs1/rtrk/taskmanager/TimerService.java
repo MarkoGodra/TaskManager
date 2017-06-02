@@ -118,17 +118,19 @@ public class TimerService extends Service {
 //            Log.d("timer_service", "local task list cleared");
 //        }
 
-        for(int i = 0; i < tasks.length; i++) {
-            //Log.d("timer_service ", tasks[i].getIme().toString() + " Added to the local list");
-            taskList.add(tasks[i]);
-        }
+        if (tasks != null) {
+            for (int i = 0; i < tasks.length; i++) {
+                //Log.d("timer_service ", tasks[i].getIme().toString() + " Added to the local list");
+                taskList.add(tasks[i]);
+            }
 
-        //Log.d("\ntimer_service", "Tasks in local list");
+            //Log.d("\ntimer_service", "Tasks in local list");
 //        for(Task task : taskList){
 //            Log.d("timer_service ", task.getIme().toString() + " vreme isteka : "
 //                    + task.getCalendar().get(Calendar.HOUR_OF_DAY )+ "" + "/"
 //                    + task.getCalendar().get(Calendar.MINUTE) + "" + "\n" + " Reminder "
 //                    + task.isReminder() + "");
 //        }
+        }
     }
 }

@@ -42,9 +42,9 @@ public class StatisticsView extends View {
 
     MyAnimation animation = new MyAnimation();
 
-    private String redPercentage = "0";
-    private String yellowPercentage = "0";
-    private String greenPercentage = "0";
+    private String redPercentage = "0%";
+    private String yellowPercentage = "0%";
+    private String greenPercentage = "0%";
 
     private String hpTask;
     private String mpTask;
