@@ -16,6 +16,7 @@ public class Stats extends AppCompatActivity {
     private Button btnBack;
     StatisticsView statisticsView;
     private DatabaseHelper db;
+    CalculateStatsNative calculateStatsNative;
 
     @Override
     public void onBackPressed() {
@@ -30,6 +31,7 @@ public class Stats extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
+        calculateStatsNative = new CalculateStatsNative();
 
         int redSum = 0;
         int redFinishedSum = 0;
@@ -77,20 +79,26 @@ public class Stats extends AppCompatActivity {
         double greenPercentage;
         double yellowPercentage;
 
-        if(redSum > 0)
-            redPercentage = (double)redFinishedSum / redSum * 100;
-        else
-            redPercentage = 0.01;
+//        if(redSum > 0)
+//            redPercentage = (double)redFinishedSum / redSum * 100;
+//        else
+//            redPercentage = 0.01;
+//
+//        if(greenSum > 0)
+//            greenPercentage = (double)greenFinishedSum / greenSum * 100;
+//        else
+//            greenPercentage = 0.01;
+//
+//        if(yellowSum > 0)
+//            yellowPercentage = (double)yellowFinishedSum / yellowSum * 100;
+//        else
+//            yellowPercentage = 0.01;
 
-        if(greenSum > 0)
-            greenPercentage = (double)greenFinishedSum / greenSum * 100;
-        else
-            greenPercentage = 0.01;
+        redPercentage = calculateStatsNative.calculatePercentage(redSum, redFinishedSum);
 
-        if(yellowSum > 0)
-            yellowPercentage = (double)yellowFinishedSum / yellowSum * 100;
-        else
-            yellowPercentage = 0.01;
+        greenPercentage = calculateStatsNative.calculatePercentage(greenSum, greenFinishedSum);
+
+        yellowPercentage= calculateStatsNative.calculatePercentage(yellowSum, yellowFinishedSum);
 
 
         Log.d("stats", "red % " + redPercentage + "");
