@@ -111,7 +111,6 @@ public class StartActivity extends AppCompatActivity{
             Log.d("Database items", "Databse is empty");
         }
 
-
         adapter.update(tasks);
     }
 
